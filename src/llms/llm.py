@@ -4,10 +4,7 @@ import os
 class LLMManager:
     
     def __init__(self):
-        api_key = os.getenv("GROQ_API_KEY")
-        if not api_key:
-            raise ValueError("GROQ_API_KEY environment variable not set")
-        
+        api_key = os.getenv("GROQ_API_KEY")        
         self.llm = ChatGroq(
             api_key=api_key,
             model="llama-3.3-70b-versatile",
@@ -16,11 +13,9 @@ class LLMManager:
         )
     
     def generate_response(self, prompt: str) -> str:
-        try:
-            response = self.llm.invoke(prompt)
-            return response.content
-        except Exception as e:
-            raise Exception(f"LLM generation failed: {str(e)}")
+        response = self.llm.invoke(prompt)
+        return response.content
+
     
     def generate_title(self, transcript: str) -> str:
         prompt = f"""Based on the following video transcript, generate a catchy and engaging blog post title. 
