@@ -1,7 +1,7 @@
 import streamlit as st
 import os
 from graphs import create_blog_graph
-from states import BlogState
+from states.states import BlogState
 
 st.set_page_config(
     page_title="YouTube to Blog",

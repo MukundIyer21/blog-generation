@@ -1,7 +1,7 @@
 from youtube_transcript_api import YouTubeTranscriptApi
 import re
 from states import BlogState
-from llm import LLMManager
+from llms.llm import LLMManager
 
 llm_manager = LLMManager()
 

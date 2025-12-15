@@ -1,6 +1,6 @@
 from langgraph.graph import StateGraph, END
-from states import BlogState
-from nodes import (
+from states.states import BlogState
+from nodes.nodes import (
     extract_video_id,
     fetch_transcript,
     generate_title_node,
