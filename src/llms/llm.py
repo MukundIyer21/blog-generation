@@ -12,29 +12,29 @@ class LLMManager:
             max_tokens=4000
         )
     
-    def generate_response(self, prompt: str) -> str:
+    def generate_response(self, prompt) :
         response = self.llm.invoke(prompt)
         return response.content
 
     
     def generate_title(self, transcript: str) -> str:
-        prompt = f"""Based on the following video transcript, generate a catchy and engaging blog post title. 
+        prompt = f"""Based on the following video transcript, generate a blog post title. 
 Only return the title, nothing else.
 
 Transcript:
-{transcript[:2000]}..."""
+{transcript}..."""
         
         return self.generate_response(prompt)
     
-    def generate_summary(self, transcript: str) -> str:
-        prompt = f"""Create a brief 2-3 sentence summary of the following video transcript.
+    def generate_summary(self, transcript):
+        prompt = f"""Create a brief paragraph summary of the following video transcript.
 
 Transcript:
 {transcript[:3000]}..."""
         
         return self.generate_response(prompt)
     
-    def generate_blog(self, transcript: str, title: str, summary: str) -> str:
+    def generate_blog(self, transcript, title, summary):
         prompt = f"""Convert the following video transcript into a well-structured, engaging blog post.
 
 Title: {title}

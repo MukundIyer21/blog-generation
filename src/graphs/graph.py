@@ -12,8 +12,6 @@ from nodes import (
 def create_blog_graph():
     
     workflow = StateGraph(BlogState)
-    
-    workflow.add_node("extract_video_id", extract_video_id)
     workflow.add_node("fetch_transcript", fetch_transcript)
     workflow.add_node("generate_title", generate_title_node)
     workflow.add_node("generate_summary", generate_summary_node)
@@ -21,14 +19,6 @@ def create_blog_graph():
     
     workflow.set_entry_point("extract_video_id")
     
-    workflow.add_conditional_edges(
-        "extract_video_id",
-        check_error,
-        {
-            "continue": "fetch_transcript",
-            "error": END
-        }
-    )
     
     workflow.add_conditional_edges(
         "fetch_transcript",

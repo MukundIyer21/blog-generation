@@ -5,37 +5,8 @@ from llm import LLMManager
 
 llm_manager = LLMManager()
 
-def extract_video_id(state: BlogState) -> BlogState:
-    try:
-        url = state["youtube_url"]
-        
-        patterns = [
-            r'(?:v=|\/)([0-9A-Za-z_-]{11}).*',
-            r'(?:embed\/)([0-9A-Za-z_-]{11})',
-            r'^([0-9A-Za-z_-]{11})$'
-        ]
-        
-        video_id = None
-        for pattern in patterns:
-            match = re.search(pattern, url)
-            if match:
-                video_id = match.group(1)
-                break
-        
-        if not video_id:
-            state["error"] = "Invalid YouTube URL"
-            state["status"] = "error"
-        else:
-            state["video_id"] = video_id
-            state["status"] = "video_id_extracted"
-        
-        return state
-    except Exception as e:
-        state["error"] = f"Error extracting video ID: {str(e)}"
-        state["status"] = "error"
-        return state
 
-def fetch_transcript(state: BlogState) -> BlogState:
+def fetch_transcript(state):
     try:
         video_id = state["video_id"]
         
@@ -52,7 +23,7 @@ def fetch_transcript(state: BlogState) -> BlogState:
         state["status"] = "error"
         return state
 
-def generate_title_node(state: BlogState) -> BlogState:
+def generate_title_node(state):
     try:
         transcript = state["transcript"]
         title = llm_manager.generate_title(transcript)
@@ -66,7 +37,7 @@ def generate_title_node(state: BlogState) -> BlogState:
         state["status"] = "error"
         return state
 
-def generate_summary_node(state: BlogState) -> BlogState:
+def generate_summary_node(state):
     try:
         transcript = state["transcript"]
         summary = llm_manager.generate_summary(transcript)
@@ -80,7 +51,7 @@ def generate_summary_node(state: BlogState) -> BlogState:
         state["status"] = "error"
         return state
 
-def generate_blog_node(state: BlogState) -> BlogState:
+def generate_blog_node(state):
     try:
         transcript = state["transcript"]
         title = state["title"]
@@ -97,7 +68,7 @@ def generate_blog_node(state: BlogState) -> BlogState:
         state["status"] = "error"
         return state
 
-def check_error(state: BlogState) -> str:
+def check_error(state):
     if state.get("error"):
         return "error"
     return "continue"
