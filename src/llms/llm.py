@@ -45,14 +45,6 @@ Transcript:
 Title: {title}
 Summary: {summary}
 
-Requirements:
-- Write in a conversational yet professional tone
-- Use proper headings and subheadings
-- Include an introduction and conclusion
-- Break content into digestible paragraphs
-- Maintain the key points and insights from the video
-- Make it engaging and readable
-
 Transcript:
 {transcript}
 
