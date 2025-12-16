@@ -1,6 +1,5 @@
 from langgraph.graph import StateGraph, END
 from src.states.states import BlogState
-from IPython.display import Image
 from src.nodes.nodes import (
     title_creation_node,
     content_generator_node,
@@ -27,7 +26,3 @@ def create_blog_graph():
     workflow.add_edge("french_translation", END)
     
     return workflow.compile()
-
-if __name__=="__main__":
-    workflow = create_blog_graph()
-    workflow.get_graph().draw_png("graph.png")
