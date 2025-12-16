@@ -5,7 +5,8 @@ from src.nodes.nodes import (
     content_generator_node,
     route_node,
     hindi_translation_node,
-    french_translation_node
+    french_translation_node,
+    route_selector
 )
 
 def create_blog_graph():
@@ -16,12 +17,21 @@ def create_blog_graph():
     workflow.add_node("route", route_node)
     workflow.add_node("hindi_translation", hindi_translation_node)
     workflow.add_node("french_translation", french_translation_node)
-    
     workflow.set_entry_point("title_creation")
+    
     workflow.add_edge("title_creation", "content_generator")
     workflow.add_edge("content_generator", "route")
-    workflow.add_edge("route", "hindi_translation")
-    workflow.add_edge("route", "french_translation")
+   
+    workflow.add_conditional_edges(
+        "route",
+        route_selector,
+        {
+            "english":END,
+            "hindi":"hindi_translation",
+            "french":"french_translation"
+        }
+    )
+
     workflow.add_edge("hindi_translation", END)
     workflow.add_edge("french_translation", END)
     

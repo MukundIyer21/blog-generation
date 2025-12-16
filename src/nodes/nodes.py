@@ -28,6 +28,13 @@ def content_generator_node(state):
 def route_node(state):
     return state
 
+def route_selector(state):
+    if state["language"]=="hindi":
+        return "hindi"
+    if state["language"]=="french":
+        return "french"
+    return "english"
+    
 def hindi_translation_node(state):
     llm = get_llm()
     title = state["title"]
