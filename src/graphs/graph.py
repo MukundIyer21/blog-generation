@@ -1,7 +1,6 @@
 from langgraph.graph import StateGraph, END
 from states.states import BlogState
 from nodes.nodes import (
-    extract_video_id,
     fetch_transcript,
     generate_title_node,
     generate_summary_node,
@@ -9,7 +8,8 @@ from nodes.nodes import (
     check_error,
     translate_to_french_node
 )
-
+from dotenv import load_dotenv
+load_dotenv()
 def create_blog_graph():
     
     workflow = StateGraph(BlogState)
@@ -18,7 +18,7 @@ def create_blog_graph():
     workflow.add_node("generate_summary", generate_summary_node)
     workflow.add_node("generate_blog", generate_blog_node)
     
-    workflow.set_entry_point("extract_video_id")
+    workflow.set_entry_point("fetch_transcript")
     
     
     workflow.add_conditional_edges(

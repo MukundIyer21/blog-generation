@@ -1,12 +1,15 @@
+from dotenv import load_dotenv
+load_dotenv()  
 import streamlit as st
 import os
+
 from graphs import create_blog_graph, create_translation_graph
 from states import BlogState
 
 st.set_page_config(
     page_title="YouTube to Blog",
     layout="centered"
-)
+)   
 
 st.title("YouTube to Blog")
 st.caption("Convert a YouTube video into a blog post")

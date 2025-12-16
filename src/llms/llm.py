@@ -1,13 +1,14 @@
 from langchain_groq import ChatGroq
 import os
+from dotenv import load_dotenv
+load_dotenv()
+
 
 class LLMManager:
     
-    def __init__(self):
-        api_key = os.getenv("GROQ_API_KEY")        
+    def __init__(self):     
         self.llm = ChatGroq(
-            api_key=api_key,
-            model="llama-3.3-70b-versatile",
+            model="llama3-70b-8192",
             temperature=0.7,
             max_tokens=4000
         )
