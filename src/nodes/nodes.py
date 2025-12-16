@@ -1,7 +1,7 @@
 from src.states.states import BlogState
 from src.llms.llm import get_llm
 
-def title_creation_node(state: BlogState) -> BlogState:
+def title_creation_node(state):
     llm = get_llm()
     topic = state["topic"]
     
@@ -12,7 +12,7 @@ def title_creation_node(state: BlogState) -> BlogState:
     state["title"] = title
     return state
 
-def content_generator_node(state: BlogState) -> BlogState:
+def content_generator_node(state):
     llm = get_llm()
     topic = state["topic"]
     title = state["title"]
@@ -25,10 +25,10 @@ def content_generator_node(state: BlogState) -> BlogState:
     state["content"] = content
     return state
 
-def route_node(state: BlogState) -> BlogState:
+def route_node(state):
     return state
 
-def hindi_translation_node(state: BlogState) -> BlogState:
+def hindi_translation_node(state):
     llm = get_llm()
     title = state["title"]
     content = state["content"]
@@ -46,7 +46,7 @@ def hindi_translation_node(state: BlogState) -> BlogState:
     state["hindi_translation"] = hindi_translation
     return state
 
-def french_translation_node(state: BlogState) -> BlogState:
+def french_translation_node(state):
     llm = get_llm()
     title = state["title"]
     content = state["content"]
