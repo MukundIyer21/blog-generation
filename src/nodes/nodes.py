@@ -1,5 +1,5 @@
-from src.states.states import BlogState
-from src.llms.llm import get_llm
+from states.states import BlogState
+from llms.llm import get_llm
 
 def title_creation_node(state):
     llm = get_llm()

@@ -1,6 +1,6 @@
 from langgraph.graph import StateGraph, END
-from src.states.states import BlogState
-from src.nodes.nodes import (
+from states.states import BlogState
+from nodes.nodes import (
     title_creation_node,
     content_generator_node,
     route_node,
