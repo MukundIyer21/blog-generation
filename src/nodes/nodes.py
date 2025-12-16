@@ -1,4 +1,4 @@
-from youtube_transcript_api import YouTubeTranscriptApi
+from langchain_community.document_loaders import YoutubeLoader
 import re
 from states import BlogState
 from llms.llm import LLMManager
@@ -6,13 +6,14 @@ from llms.llm import LLMManager
 llm_manager = LLMManager()
 
 
-def fetch_transcript(state):
+def fetch_transcript(state) :
     try:
-        video_id = state["video_id"]
+        url = state["youtube_url"]
         
-        transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
+        loader = YoutubeLoader.from_youtube_url(url, add_video_info=False)
+        docs = loader.load()
         
-        full_transcript = " ".join([item["text"] for item in transcript_list])
+        full_transcript = " ".join([doc.page_content for doc in docs])
         
         state["transcript"] = full_transcript
         state["status"] = "transcript_fetched"
@@ -22,7 +23,6 @@ def fetch_transcript(state):
         state["error"] = f"Error fetching transcript: {str(e)}. The video may not have captions available."
         state["status"] = "error"
         return state
-
 def generate_title_node(state):
     try:
         transcript = state["transcript"]
