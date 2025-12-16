@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from src.graphs.graph import create_blog_graph
 import uvicorn
 
-app = FastAPI(title="Blog Generation API", version="1.0.0")
+app = FastAPI()
 
 class BlogRequest(BaseModel):
     topic: str

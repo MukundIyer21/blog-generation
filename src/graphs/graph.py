@@ -1,82 +1,28 @@
 from langgraph.graph import StateGraph, END
-from states.states import BlogState
-from nodes.nodes import (
-    fetch_transcript,
-    generate_title_node,
-    generate_summary_node,
-    generate_blog_node,
-    check_error,
-    translate_to_french_node
+from src.states.states import BlogState
+from src.nodes.nodes import (
+    title_creation_node,
+    content_generator_node,
+    route_node,
+    hindi_translation_node,
+    french_translation_node
 )
-from dotenv import load_dotenv
-load_dotenv()
+
 def create_blog_graph():
-    
-    workflow = StateGraph(BlogState)
-    workflow.add_node("fetch_transcript", fetch_transcript)
-    workflow.add_node("generate_title", generate_title_node)
-    workflow.add_node("generate_summary", generate_summary_node)
-    workflow.add_node("generate_blog", generate_blog_node)
-    
-    workflow.set_entry_point("fetch_transcript")
-    
-    
-    workflow.add_conditional_edges(
-        "fetch_transcript",
-        check_error,
-        {
-            "continue": "generate_title",
-            "error": END
-        }
-    )
-    
-    workflow.add_conditional_edges(
-        "generate_title",
-        check_error,
-        {
-            "continue": "generate_summary",
-            "error": END
-        }
-    )
-    
-    workflow.add_conditional_edges(
-        "generate_summary",
-        check_error,
-        {
-            "continue": "generate_blog",
-            "error": END
-        }
-    )
-    
-    workflow.add_conditional_edges(
-        "generate_blog",
-        check_error,
-        {
-            "continue": END,
-            "error": END
-        }
-    )
-    
-    app = workflow.compile()
-    
-    return app
-def create_translation_graph():
-    
     workflow = StateGraph(BlogState)
     
-    workflow.add_node("translate_to_french", translate_to_french_node)
+    workflow.add_node("title_creation", title_creation_node)
+    workflow.add_node("content_generator", content_generator_node)
+    workflow.add_node("route", route_node)
+    workflow.add_node("hindi_translation", hindi_translation_node)
+    workflow.add_node("french_translation", french_translation_node)
     
-    workflow.set_entry_point("translate_to_french")
+    workflow.set_entry_point("title_creation")
+    workflow.add_edge("title_creation", "content_generator")
+    workflow.add_edge("content_generator", "route")
+    workflow.add_edge("route", "hindi_translation")
+    workflow.add_edge("route", "french_translation")
+    workflow.add_edge("hindi_translation", END)
+    workflow.add_edge("french_translation", END)
     
-    workflow.add_conditional_edges(
-        "translate_to_french",
-        check_error,
-        {
-            "continue": END,
-            "error": END
-        }
-    )
-    
-    app = workflow.compile()
-    
-    return app
+    return workflow.compile()
