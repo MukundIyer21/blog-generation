@@ -72,3 +72,20 @@ def check_error(state):
     if state.get("error"):
         return "error"
     return "continue"
+
+def translate_to_french_node(state):
+    try:
+        title = state["title"]
+        blog_content = state["blog_content"]
+        
+        translations = llm_manager.translate_to_french(title, blog_content)
+        
+        state["french_title"] = translations["french_title"]
+        state["french_blog_content"] = translations["french_blog_content"]
+        state["status"] = "translated"
+        
+        return state
+    except Exception as e:
+        state["error"] = f"Error translating to French: {str(e)}"
+        state["status"] = "error"
+        return state

@@ -6,7 +6,8 @@ from nodes.nodes import (
     generate_title_node,
     generate_summary_node,
     generate_blog_node,
-    check_error
+    check_error,
+    translate_to_french_node
 )
 
 def create_blog_graph():
@@ -49,6 +50,26 @@ def create_blog_graph():
     
     workflow.add_conditional_edges(
         "generate_blog",
+        check_error,
+        {
+            "continue": END,
+            "error": END
+        }
+    )
+    
+    app = workflow.compile()
+    
+    return app
+def create_translation_graph():
+    
+    workflow = StateGraph(BlogState)
+    
+    workflow.add_node("translate_to_french", translate_to_french_node)
+    
+    workflow.set_entry_point("translate_to_french")
+    
+    workflow.add_conditional_edges(
+        "translate_to_french",
         check_error,
         {
             "continue": END,
