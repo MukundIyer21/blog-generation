@@ -1,91 +1,65 @@
-from langchain_community.document_loaders import YoutubeLoader
-import re
-from states import BlogState
-from llms.llm import LLMManager
+from src.states.states import BlogState
+from src.llms.llm import get_llm
 
-llm_manager = LLMManager()
+def title_creation_node(state: BlogState) -> BlogState:
+    llm = get_llm()
+    topic = state["topic"]
+    
+    prompt = f"""Create a catchy and engaging blog title for the following topic: {topic}    
+    Respond with ONLY the title, no additional text."""
+    
+    title = llm.invoke(prompt).content.strip()
+    state["title"] = title
+    return state
 
+def content_generator_node(state: BlogState) -> BlogState:
+    llm = get_llm()
+    topic = state["topic"]
+    title = state["title"]
+    
+    prompt = f"""Write a comprehensive blog post on the following topic: {topic}
+    Blog Title: {title}    
+    Write the blog content:"""
+    
+    content = llm.invoke(prompt).content.strip()
+    state["content"] = content
+    return state
 
-def fetch_transcript(state) :
-    try:
-        url = state["youtube_url"]
-        
-        loader = YoutubeLoader.from_youtube_url(url, add_video_info=False)
-        docs = loader.load()
-        
-        full_transcript = " ".join([doc.page_content for doc in docs])
-        
-        state["transcript"] = full_transcript
-        state["status"] = "transcript_fetched"
-        
-        return state
-    except Exception as e:
-        state["error"] = f"Error fetching transcript: {str(e)}. The video may not have captions available."
-        state["status"] = "error"
-        return state
-def generate_title_node(state):
-    try:
-        transcript = state["transcript"]
-        title = llm_manager.generate_title(transcript)
-        
-        state["title"] = title.strip()
-        state["status"] = "title_generated"
-        
-        return state
-    except Exception as e:
-        state["error"] = f"Error generating title: {str(e)}"
-        state["status"] = "error"
-        return state
+def route_node(state: BlogState) -> BlogState:
+    return state
 
-def generate_summary_node(state):
-    try:
-        transcript = state["transcript"]
-        summary = llm_manager.generate_summary(transcript)
-        
-        state["summary"] = summary.strip()
-        state["status"] = "summary_generated"
-        
-        return state
-    except Exception as e:
-        state["error"] = f"Error generating summary: {str(e)}"
-        state["status"] = "error"
-        return state
+def hindi_translation_node(state: BlogState) -> BlogState:
+    llm = get_llm()
+    title = state["title"]
+    content = state["content"]
+    
+    prompt = f"""Translate the following blog post to Hindi. Maintain the tone and style.
+    
+    Title: {title}
+    
+    Content:
+    {content}
+    
+    Provide the Hindi translation (include both title and content):"""
+    
+    hindi_translation = llm.invoke(prompt).content.strip()
+    state["hindi_translation"] = hindi_translation
+    return state
 
-def generate_blog_node(state):
-    try:
-        transcript = state["transcript"]
-        title = state["title"]
-        summary = state["summary"]
-        
-        blog_content = llm_manager.generate_blog(transcript, title, summary)
-        
-        state["blog_content"] = blog_content.strip()
-        state["status"] = "completed"
-        
-        return state
-    except Exception as e:
-        state["error"] = f"Error generating blog: {str(e)}"
-        state["status"] = "error"
-        return state
-
-def check_error(state):
-    if state.get("error"):
-        return "error"
-    return "continue"
-
-def translate_to_french_node(state):
-    try:
-        title = state["title"]
-        blog_content = state["blog_content"]
-        
-        translations = llm_manager.translate_to_french(title, blog_content)
-        
-        state["french_title"] = translations["french_title"]
-        state["french_blog_content"] = translations["french_blog_content"]
-        state["status"] = "translated"
-        
-        return state
-    except Exception as e:
-        state["error"] = f"Error translating to French: {str(e)}"
-        state["status"] = "error"
-        return state
+def french_translation_node(state: BlogState) -> BlogState:
+    llm = get_llm()
+    title = state["title"]
+    content = state["content"]
+    
+    prompt = f"""Translate the following blog post to French. Maintain the tone and style.
+    
+    Title: {title}
+    
+    Content:
+    {content}
+    
+    Provide the French translation (include both title and content):"""
+    
+    french_translation = llm.invoke(prompt).content.strip()
+    state["french_translation"] = french_translation
+    return state
